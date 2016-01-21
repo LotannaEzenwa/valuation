@@ -32,3 +32,4 @@
 *.dSYM/
 
 util/logs/
+util/quandl/settings.h
