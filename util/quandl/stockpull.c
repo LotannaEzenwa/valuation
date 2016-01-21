@@ -2,6 +2,17 @@
 
 
 int main(int argc, char *argv[]){
+
+	int opt = 0;
+	char buff[PATH_MAX + 1];
+	char* API = "https://www.quandl.com/api/v3/datasets/WIKI/%s%s?auth_token=%s";
+	char* ext = ".csv";
+	char path[1024] = "../../data";
+	char *cwd = getcwd(buff,PATH_MAX+1);
+	char c;
+
+
+
 	if (argc == 1 || strstr(argv[1],"--help")){
 		printf ("Usage: %s [TICKER] [DIRECTORY] [-o]\n", argv[0]); //help command
 		printf("\n\n");
@@ -12,10 +23,6 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 
-	int opt = 0;
-	char* API = "https://www.quandl.com/v3/";
-
-	char c;
 
     while ((c = getopt (argc, argv, "")) > 0) {
 
@@ -26,7 +33,7 @@ int main(int argc, char *argv[]){
         switch (c) { //Switch the options
 
         	case 'o':
-        		fprintf(stdout, "Options for Ticker:%s Selected\n", argv[argc-1]);
+        		fprintf(stdout, "Options for Ticker:%s Selected\n", argv[optind]);
         		opt = 1;
         		break;
         	default:
@@ -39,12 +46,26 @@ int main(int argc, char *argv[]){
     argc -= optind; //Increment argument number
     argv += optind; //Increment argument pointer
 
+
+  // Create Correct URL String
+  char url[1024];
+  char filename[64];
+  strcat(filename,argv[0]);
+  strcat(filename,ext);
+  int urlLen = sprintf(url,API,argv[0],ext,API_KEY);
+
   // Init Curl
   CURLcode status = curl_global_init(CURL_GLOBAL_SSL);
+  CURL* ch = curl_easy_init();
+
+
+
 
   //Do Some Stuff Here
-  if (!status){
-  	printf("Value is %d\n",status);
+  if (!status || !ch){
+  	chdir(path);
+  	FILE* fp = requestFileAPI(filename,url,status,ch);
+  	chdir(cwd);
   }
 
 
@@ -55,7 +76,31 @@ int main(int argc, char *argv[]){
 }
 
 
-static FILE* requestFile(char* URL){
+static char* buildURL(char* api, char* TICKER){
 	return NULL;
+} 
+
+static size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+    size_t written;
+    written = fwrite(ptr, size, nmemb, stream);
+    return written;
 }
+
+static FILE* requestFileAPI(char *fn, char *url, CURLcode res, CURL *ch){
+	FILE* p = fopen(fn,"w");
+	if (!fn | !p){
+		return NULL;
+	}
+
+	curl_easy_setopt(ch, CURLOPT_URL, url);
+	curl_easy_setopt(ch, CURLOPT_WRITEFUNCTION, write_data);
+	curl_easy_setopt(ch, CURLOPT_WRITEDATA, p);
+	res = curl_easy_perform(ch);
+	fclose(p);
+
+	return p;
+	
+}
+
+
 

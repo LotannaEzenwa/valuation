@@ -21,5 +21,7 @@
 
 
 int main(int argc, char **argv);
+static FILE* requestFileAPI(char *fn, char *url, CURLcode res, CURL *ch);
+static size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
 
 #endif

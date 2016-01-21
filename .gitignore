@@ -33,3 +33,5 @@
 
 util/logs/
 util/quandl/settings.h
+
+data/
