@@ -60,17 +60,22 @@ int main(int argc, char *argv[]){
 
 
 
-
+  
   //Do Some Stuff Here
-  if (!status || !ch){
+  if (1){
   	chdir(path);
-  	FILE* fp = requestFileAPI(filename,url,status,ch);
+  	requestFileAPI(filename,url,status,ch);
+  	
+
   	chdir(cwd);
-  }
+  	 }
 
 
   // Clean Up Curl
+  curl_easy_cleanup(ch);
   curl_global_cleanup();
+
+  
 
   return 0;
 }
@@ -91,6 +96,7 @@ static FILE* requestFileAPI(char *fn, char *url, CURLcode res, CURL *ch){
 	if (!fn | !p){
 		return NULL;
 	}
+
 
 	curl_easy_setopt(ch, CURLOPT_URL, url);
 	curl_easy_setopt(ch, CURLOPT_WRITEFUNCTION, write_data);

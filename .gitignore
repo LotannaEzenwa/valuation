@@ -35,3 +35,7 @@ util/logs/
 util/quandl/settings.h
 
 data/
+
+util/quandl/stock
+
+*.m~

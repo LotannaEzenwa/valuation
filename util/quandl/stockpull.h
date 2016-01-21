@@ -8,6 +8,7 @@
 
 
 #include <unistd.h> //That good good
+#include <stdlib.h> //Memsy
 #include <string.h> //String Manipulation
 #include <stdio.h> //I/O
 #include <getopt.h> //Opt Switching
