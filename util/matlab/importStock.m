@@ -2,7 +2,6 @@ function [ output_args ] = importStock(ticker)
 %IMPORTSTOCK Grabs a stock's data from storage
 %   Assumes a static filestructure. Here, it's in ../../data
 cf = pwd;
-clean = 'make clean';
 make = 'make';
 
 exe='./stock';
